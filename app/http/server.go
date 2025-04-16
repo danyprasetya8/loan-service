@@ -3,6 +3,11 @@ package http
 import (
 	"loan-service/app/http/handler"
 
+	_ "loan-service/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +22,7 @@ func NewServer(handler *handler.Handler) *Server {
 func (s *Server) Run() {
 	r := gin.Default()
 	api := r.Group("/api")
+	api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	s.v1Route(api)
 
