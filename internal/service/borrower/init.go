@@ -1,9 +1,9 @@
 package borrower
 
 import (
-	"loan-service/internal/constant"
 	"loan-service/internal/entity"
 	repo "loan-service/internal/repository/borrower"
+	"loan-service/pkg/helper"
 	"loan-service/pkg/model/request"
 	"loan-service/pkg/model/response"
 	"loan-service/pkg/responsehelper"
@@ -43,7 +43,7 @@ func (s *Borrower) GetList(page *request.Pagination) (list []response.GetBorrowe
 			ID:        borrower.ID,
 			Name:      borrower.Name,
 			CreatedBy: borrower.CreatedBy,
-			CreatedAt: borrower.CreatedAt.Format(constant.DateLayout),
+			CreatedAt: helper.FormatDate(borrower.CreatedAt),
 		})
 	}
 
