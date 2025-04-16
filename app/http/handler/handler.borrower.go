@@ -54,7 +54,8 @@ func (h *Handler) CreateBorrower(c *gin.Context) {
 		return
 	}
 
-	newID, err := h.borrowerService.Create(&body)
+	requestedBy := c.GetString("authUser")
+	newID, err := h.borrowerService.Create(&body, requestedBy)
 
 	if err != nil {
 		responsehelper.BadRequest(c, err.Error())

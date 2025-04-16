@@ -33,8 +33,16 @@ func (b *Borrower) Count() (c int64) {
 }
 
 func (b *Borrower) GetByName(name string) (borrower *entity.Borrower) {
-	b.db.Where("name = ?", name).
-		First(borrower)
+	borrower = &entity.Borrower{}
+
+	err := b.db.Where("name = ?", name).
+		First(borrower).
+		Error
+
+	if err != nil {
+		return nil
+	}
+
 	return
 }
 

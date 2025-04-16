@@ -12,7 +12,7 @@ import (
 )
 
 type IBorrowerService interface {
-	Create(req *request.CreateBorrower) (id string, err error)
+	Create(req *request.CreateBorrower, requestedBy string) (id string, err error)
 	GetList(page *request.Pagination) (list []response.GetBorrower, pageRes *response.Pagination)
 	DeleteByID(id string) (deleted bool, err error)
 }
@@ -25,10 +25,14 @@ func New(repo repo.IBorrowerRepository) IBorrowerService {
 	return &Borrower{repo}
 }
 
-func (s *Borrower) Create(req *request.CreateBorrower) (id string, err error) {
+func (s *Borrower) Create(req *request.CreateBorrower, requestedBy string) (id string, err error) {
 	newBorrower := &entity.Borrower{
 		ID:   uuid.New().String(),
 		Name: req.Name,
+		Audit: entity.Audit{
+			CreatedBy: requestedBy,
+			UpdatedBy: requestedBy,
+		},
 	}
 	err = s.repo.Create(newBorrower)
 	return newBorrower.ID, err

@@ -2,6 +2,8 @@ package http
 
 import (
 	"loan-service/app/http/handler"
+	"loan-service/app/http/middleware"
+	"loan-service/internal/constant"
 
 	_ "loan-service/docs"
 
@@ -12,11 +14,15 @@ import (
 )
 
 type Server struct {
-	handler *handler.Handler
+	handler    *handler.Handler
+	middleware *middleware.Middleware
 }
 
-func NewServer(handler *handler.Handler) *Server {
-	return &Server{handler}
+func NewServer(
+	handler *handler.Handler,
+	middleware *middleware.Middleware,
+) *Server {
+	return &Server{handler, middleware}
 }
 
 func (s *Server) Run() {
@@ -33,26 +39,51 @@ func (s *Server) v1Route(api *gin.RouterGroup) {
 	v1 := api.Group("/v1")
 
 	auth := v1.Group("/auth")
-	auth.POST("/")
+	auth.POST("/mock-login", s.handler.MockLogin)
 
-	borrower := v1.Group("/borrower")
-	borrower.GET("/", s.handler.GetBorrowers)
-	borrower.POST("/", s.handler.CreateBorrower)
-	borrower.DELETE("/:id", s.handler.DeleteBorrowerByID)
+	s.borrowerRoute(v1)
+	s.loanRoute(v1)
+}
 
+func (s *Server) borrowerRoute(v1 *gin.RouterGroup) {
+	borrower := v1.Group("/borrower", s.middleware.Authenticate)
+	borrower.GET(
+		"/",
+		s.middleware.Authorize(constant.FieldOfficer),
+		s.handler.GetBorrowers)
+	borrower.POST(
+		"/",
+		s.middleware.Authorize(constant.FieldOfficer),
+		s.handler.CreateBorrower)
+	borrower.DELETE(
+		"/:id",
+		s.middleware.Authorize(constant.FieldOfficer),
+		s.handler.DeleteBorrowerByID)
+}
+
+func (s *Server) loanRoute(v1 *gin.RouterGroup) {
 	loan := v1.Group("/loan")
 	loan.GET("/")
 	loan.GET("/:id")
 
-	// Route for FieldOfficer
-	loan.POST("/:id")
-	loan.POST("/:id/agreement-letter")
+	loan.POST(
+		"/:id",
+		s.middleware.Authorize(constant.FieldOfficer))
+	loan.POST(
+		"/:id/agreement-letter",
+		s.middleware.Authorize(constant.FieldOfficer))
 
-	// Route for Internal
-	loan.POST("/:id/_approve")
-	loan.POST("/:id/proof")
-	loan.POST("/:id/_disburse")
+	loan.POST(
+		"/:id/_approve",
+		s.middleware.Authorize(constant.Internal))
+	loan.POST(
+		"/:id/proof",
+		s.middleware.Authorize(constant.Internal))
+	loan.POST(
+		"/:id/_disburse",
+		s.middleware.Authorize(constant.Internal))
 
-	// Route for Investor
-	loan.POST("/:id/_invest")
+	loan.POST(
+		"/:id/_invest",
+		s.middleware.Authorize(constant.Investor))
 }

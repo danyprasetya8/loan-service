@@ -4,6 +4,13 @@ definitions:
       name:
         type: string
     type: object
+  request.MockLogin:
+    properties:
+      email:
+        type: string
+      role:
+        type: string
+    type: object
   response.GetBorrower:
     properties:
       createdAt:
@@ -18,6 +25,27 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/v1/auth/mock-login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.MockLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Mock login using email and user role
+      tags:
+      - Auth
   /api/v1/borrower:
     get:
       consumes:
