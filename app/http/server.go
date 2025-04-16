@@ -1,12 +1,17 @@
 package http
 
-import "github.com/gin-gonic/gin"
+import (
+	"loan-service/app/http/handler"
+
+	"github.com/gin-gonic/gin"
+)
 
 type Server struct {
+	handler *handler.Handler
 }
 
-func NewServer() *Server {
-	return &Server{}
+func NewServer(handler *handler.Handler) *Server {
+	return &Server{handler}
 }
 
 func (s *Server) Run() {
@@ -25,9 +30,9 @@ func (s *Server) v1Route(api *gin.RouterGroup) {
 	auth.POST("/")
 
 	borrower := v1.Group("/borrower")
-	borrower.GET("/")
-	borrower.POST("/")
-	borrower.DELETE("/")
+	borrower.GET("/", s.handler.GetBorrowers)
+	borrower.POST("/", s.handler.CreateBorrower)
+	borrower.DELETE("/:id", s.handler.DeleteBorrowerByID)
 
 	loan := v1.Group("/loan")
 	loan.GET("/")

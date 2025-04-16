@@ -1,7 +1,9 @@
 package responsehelper
 
 import (
+	"loan-service/pkg/model/request"
 	"loan-service/pkg/model/response"
+	"math"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -46,4 +48,13 @@ func Unauthorized(c *gin.Context) {
 		Message: "error",
 		Error:   "forbidden",
 	})
+}
+
+func ToPagination(request *request.Pagination, total int64) *response.Pagination {
+	return &response.Pagination{
+		Page:      request.Page,
+		Size:      request.Size,
+		TotalPage: int(math.Ceil(float64(total) / float64(request.Size))),
+		TotalData: total,
+	}
 }
