@@ -233,8 +233,8 @@ func (h *Handler) UploadBorrowerAgreementLetter(c *gin.Context) {
 		return
 	}
 
-	if mimeType != "application/pdf" {
-		responsehelper.BadRequest(c, "invalid pdf file")
+	if mimeType != "application/pdf" && mimeType != "image/jpeg" {
+		responsehelper.BadRequest(c, "file format must be either pdf/jpeg")
 		return
 	}
 
