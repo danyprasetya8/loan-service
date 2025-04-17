@@ -235,7 +235,7 @@ paths:
           description: OK
           schema:
             type: boolean
-      summary: Invest loan by internal
+      summary: Diburse loan by internal
       tags:
       - Loan
   /api/v1/loan/{id}/_invest:

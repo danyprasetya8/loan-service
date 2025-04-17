@@ -237,7 +237,7 @@ const docTemplate = `{
                 "tags": [
                     "Loan"
                 ],
-                "summary": "Invest loan by internal",
+                "summary": "Diburse loan by internal",
                 "parameters": [
                     {
                         "type": "string",

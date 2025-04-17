@@ -170,7 +170,7 @@ func (h *Handler) InvestLoan(c *gin.Context) {
 
 // DisburseLoan
 //
-//	@Summary		Invest loan by internal
+//	@Summary		Diburse loan by internal
 //	@Description	User with role internal can approve a loan. fieldOfficerId is user's email, borrowerAgreementLetter is file id got from upload response
 //	@Tags			Loan
 //	@Accept			json
