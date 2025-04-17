@@ -59,7 +59,7 @@ func (f *LocalFile) Save(file *multipart.FileHeader, fType constant.FileType, pa
 
 	_, ext := helper.SplitLast(file.Filename, ".")
 
-	p := "file/" + pathPrefix + "/" + fileID + "." + ext
+	p := filepath.Join("file", pathPrefix, fileID+"."+ext)
 
 	if err = f.write(file, p); err != nil {
 		return

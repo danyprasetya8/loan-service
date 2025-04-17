@@ -5,6 +5,7 @@ import (
 	"loan-service/internal/constant"
 	"loan-service/pkg/model/response"
 	"mime/multipart"
+	"path/filepath"
 )
 
 func (ls *Loan) SaveBorrowerAgreementLetter(pdf *multipart.FileHeader, loanID, requestedBy string) (res response.UploadBorrowerLetter, err error) {
@@ -18,7 +19,7 @@ func (ls *Loan) SaveBorrowerAgreementLetter(pdf *multipart.FileHeader, loanID, r
 		return res, errors.New("loan status must be invested")
 	}
 
-	pathPrefix := "borrowerAgreementLetter/" + loanID
+	pathPrefix := filepath.Join("borrowerAgreementLetter", loanID)
 
 	fileModel, err := ls.fileService.Save(pdf, constant.BorrowerAgreementLetter, pathPrefix, requestedBy)
 

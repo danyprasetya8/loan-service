@@ -5,6 +5,7 @@ import (
 	"loan-service/internal/constant"
 	"loan-service/pkg/model/response"
 	"mime/multipart"
+	"path/filepath"
 )
 
 func (ls *Loan) SaveProofOfPicture(image *multipart.FileHeader, loanID, requestedBy string) (res response.UploadLoanProofOfPicture, err error) {
@@ -18,7 +19,7 @@ func (ls *Loan) SaveProofOfPicture(image *multipart.FileHeader, loanID, requeste
 		return res, errors.New("loan status must be proposed")
 	}
 
-	pathPrefix := "proofOfPicture/" + loanID
+	pathPrefix := filepath.Join("proofOfPicture", loanID)
 
 	fileModel, err := ls.fileService.Save(image, constant.ProofOfPicture, pathPrefix, requestedBy)
 
