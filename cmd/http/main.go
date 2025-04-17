@@ -53,7 +53,7 @@ func main() {
 	fs := fileService.New(fr)
 	as := authService.New(ur)
 	bs := borrowerService.New(br)
-	ls := loanService.New(&loanService.Depedency{
+	ls := loanService.New(&loanService.Dependency{
 		FileService:          fs,
 		UserRepo:             ur,
 		BorrowerRepo:         br,

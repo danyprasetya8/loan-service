@@ -9,6 +9,7 @@ import (
 type ILoanRepository interface {
 	Get(id string) *entity.Loan
 	Create(en *entity.Loan) error
+	Save(en *entity.Loan) error
 }
 
 type Loan struct {
@@ -34,4 +35,8 @@ func (l *Loan) Get(id string) *entity.Loan {
 
 func (l *Loan) Create(en *entity.Loan) error {
 	return l.db.Create(en).Error
+}
+
+func (l *Loan) Save(en *entity.Loan) error {
+	return l.db.Save(en).Error
 }

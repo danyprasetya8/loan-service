@@ -103,7 +103,7 @@ func (h *Handler) UploadLoanProofOfPicture(c *gin.Context) {
 //	@Produce		json
 //	@Param			id		path		string				true	"Loan ID"
 //	@Param			body	body		request.ApproveLoan	true	"Request body"
-//	@Success		200		{string}	string
+//	@Success		200		{boolean}	true
 //	@Router			/api/v1/loan/{id}/_approve [POST]
 func (h *Handler) ApproveLoan(c *gin.Context) {
 	var body request.ApproveLoan
@@ -123,14 +123,15 @@ func (h *Handler) ApproveLoan(c *gin.Context) {
 	}
 
 	requestedBy := c.GetString("authUser")
-	newID, err := h.loanService.Approve(body, requestedBy)
+	body.LoanID = c.Param("id")
+	approved, err := h.loanService.Approve(body, requestedBy)
 
 	if err != nil {
 		responsehelper.BadRequest(c, err.Error())
 		return
 	}
 
-	responsehelper.Success(c, newID)
+	responsehelper.Success(c, approved)
 }
 
 // InvestLoan
@@ -156,6 +157,7 @@ func (h *Handler) InvestLoan(c *gin.Context) {
 	}
 
 	requestedBy := c.GetString("authUser")
+	body.LoanID = c.Param("id")
 	newID, err := h.loanService.Invest(body, requestedBy)
 
 	if err != nil {
@@ -195,6 +197,7 @@ func (h *Handler) DisburseLoan(c *gin.Context) {
 	}
 
 	requestedBy := c.GetString("authUser")
+	body.LoanID = c.Param("id")
 	newID, err := h.loanService.Disburse(body, requestedBy)
 
 	if err != nil {

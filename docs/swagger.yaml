@@ -206,7 +206,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            type: boolean
       summary: Approve loan by internal
       tags:
       - Loan

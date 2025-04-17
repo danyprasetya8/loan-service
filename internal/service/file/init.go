@@ -14,6 +14,7 @@ import (
 )
 
 type IFileService interface {
+	IsExist(id string) bool
 	Find(id string) *Model
 	Save(file *multipart.FileHeader, fType constant.FileType, pathPrefix, requestedBy string) (*Model, error)
 }
@@ -40,6 +41,11 @@ func (f *LocalFile) Find(id string) *Model {
 		MimeType:     file.MimeType,
 		Type:         file.Type,
 	}
+}
+
+func (f *LocalFile) IsExist(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil || !os.IsNotExist(err)
 }
 
 func (f *LocalFile) Save(file *multipart.FileHeader, fType constant.FileType, pathPrefix, requestedBy string) (m *Model, err error) {

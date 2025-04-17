@@ -8,15 +8,18 @@ type ProposeLoan struct {
 }
 
 type ApproveLoan struct {
+	LoanID         string `json:"-"`
 	FieldOfficerID string `json:"fieldOfficerId"`
 	ProofOfPicture string `json:"proofOfPicture"`
 }
 
 type InvestLoan struct {
-	Amount int64 `json:"amount"`
+	LoanID string `json:"-"`
+	Amount int64  `json:"amount"`
 }
 
 type DisburseLoan struct {
+	LoanID                  string `json:"-"`
 	FieldOfficerID          string `json:"fieldOfficerId"`
 	BorrowerAgreementLetter string `json:"borrowerAgreementLetter"`
 }
