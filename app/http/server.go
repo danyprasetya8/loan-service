@@ -70,9 +70,6 @@ func (s *Server) loanRoute(v1 *gin.RouterGroup) {
 		"/",
 		s.middleware.Authorize(constant.FieldOfficer),
 		s.handler.ProposeLoan)
-	loan.POST(
-		"/agreement-letter",
-		s.middleware.Authorize(constant.FieldOfficer))
 
 	loan.POST(
 		"/:id/_approve",
@@ -80,11 +77,16 @@ func (s *Server) loanRoute(v1 *gin.RouterGroup) {
 		s.handler.ApproveLoan)
 	loan.POST(
 		"/:id/proof",
-		s.middleware.Authorize(constant.Internal))
+		s.middleware.Authorize(constant.Internal),
+		s.handler.UploadLoanProofOfPicture)
 	loan.POST(
 		"/:id/_disburse",
 		s.middleware.Authorize(constant.Internal),
 		s.handler.DisburseLoan)
+	loan.POST(
+		"/:id/borrower-agreement-letter",
+		s.middleware.Authorize(constant.Internal),
+		s.handler.UploadBorrowerAgreementLetter)
 
 	loan.POST(
 		"/:id/_invest",

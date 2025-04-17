@@ -14,6 +14,16 @@ type Audit struct {
 	UpdatedBy string `gorm:"type:varchar(255)"`
 }
 
+type File struct {
+	ID           string            `gorm:"primaryKey;type:varchar(255)"`
+	OriginalName string            `gorm:"not null"`
+	Path         string            `gorm:"not null"`
+	MimeType     string            `gorm:"not null"`
+	Type         constant.FileType `gorm:"not null"`
+	DeletedAt    gorm.DeletedAt    `gorm:"index"`
+	Audit
+}
+
 type User struct {
 	Email     string            `gorm:"primaryKey;type:varchar(255)"`
 	Role      constant.UserRole `gorm:"not null"`

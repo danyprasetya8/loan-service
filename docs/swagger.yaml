@@ -52,6 +52,24 @@ definitions:
       name:
         type: string
     type: object
+  response.UploadBorrowerLetter:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  response.UploadLoanProofOfPicture:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -169,8 +187,13 @@ paths:
       consumes:
       - application/json
       description: User with role internal can approve a loan. fieldOfficerId is user's
-        email, proofOfPicture is path got from upload response
+        email, proofOfPicture is file id got from upload response
       parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Request body
         in: body
         name: body
@@ -192,8 +215,13 @@ paths:
       consumes:
       - application/json
       description: User with role internal can approve a loan. fieldOfficerId is user's
-        email, borrowerAgreementLetter is path got from upload response
+        email, borrowerAgreementLetter is file id got from upload response
       parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Request body
         in: body
         name: body
@@ -215,6 +243,11 @@ paths:
       consumes:
       - application/json
       parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Request body
         in: body
         name: body
@@ -229,6 +262,56 @@ paths:
           schema:
             type: string
       summary: Invest loan by investor
+      tags:
+      - Loan
+  /api/v1/loan/{id}/borrower-agreement-letter:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: PDF to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UploadBorrowerLetter'
+      summary: Upload borrower agreement letter
+      tags:
+      - Loan
+  /api/v1/loan/{id}/proof:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Picture to upload
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UploadLoanProofOfPicture'
+      summary: Upload loan proof of picture
       tags:
       - Loan
 swagger: "2.0"

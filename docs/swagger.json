@@ -175,7 +175,7 @@
         },
         "/api/v1/loan/{id}/_approve": {
             "post": {
-                "description": "User with role internal can approve a loan. fieldOfficerId is user's email, proofOfPicture is path got from upload response",
+                "description": "User with role internal can approve a loan. fieldOfficerId is user's email, proofOfPicture is file id got from upload response",
                 "consumes": [
                     "application/json"
                 ],
@@ -187,6 +187,13 @@
                 ],
                 "summary": "Approve loan by internal",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Loan ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Request body",
                         "name": "body",
@@ -209,7 +216,7 @@
         },
         "/api/v1/loan/{id}/_disburse": {
             "post": {
-                "description": "User with role internal can approve a loan. fieldOfficerId is user's email, borrowerAgreementLetter is path got from upload response",
+                "description": "User with role internal can approve a loan. fieldOfficerId is user's email, borrowerAgreementLetter is file id got from upload response",
                 "consumes": [
                     "application/json"
                 ],
@@ -221,6 +228,13 @@
                 ],
                 "summary": "Invest loan by internal",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Loan ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Request body",
                         "name": "body",
@@ -255,6 +269,13 @@
                 "summary": "Invest loan by investor",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Loan ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Request body",
                         "name": "body",
                         "in": "body",
@@ -269,6 +290,82 @@
                         "description": "OK",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/loan/{id}/borrower-agreement-letter": {
+            "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loan"
+                ],
+                "summary": "Upload borrower agreement letter",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Loan ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "PDF to upload",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadBorrowerLetter"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/loan/{id}/proof": {
+            "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loan"
+                ],
+                "summary": "Upload loan proof of picture",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Loan ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Picture to upload",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadLoanProofOfPicture"
                         }
                     }
                 }
@@ -355,6 +452,34 @@
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.UploadBorrowerLetter": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.UploadLoanProofOfPicture": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }

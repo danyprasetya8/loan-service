@@ -51,13 +51,57 @@ func (h *Handler) ProposeLoan(c *gin.Context) {
 	responsehelper.Success(c, newID)
 }
 
+// UploadLoanProofOfPicture
+//
+//	@Summary	Upload loan proof of picture
+//	@Tags		Loan
+//	@Accept		multipart/form-data
+//	@Produce	json
+//	@Param		id		path		string	true	"Loan ID"
+//	@Param		image	formData	file	true	"Picture to upload"
+//	@Success	200		{object}	response.UploadLoanProofOfPicture
+//	@Router		/api/v1/loan/{id}/proof [POST]
+func (h *Handler) UploadLoanProofOfPicture(c *gin.Context) {
+	image, err := c.FormFile("image")
+
+	if err != nil {
+		responsehelper.BadRequest(c, err.Error())
+		return
+	}
+
+	mimeType, err := helper.GetMimeType(image)
+
+	if err != nil {
+		responsehelper.BadRequest(c, err.Error())
+		return
+	}
+
+	if mimeType != "image/jpeg" && mimeType != "image/png" {
+		responsehelper.BadRequest(c, "invalid image")
+		return
+	}
+
+	loanID := c.Param("id")
+
+	requestedBy := c.GetString("authUser")
+	uploadRes, err := h.loanService.SaveProofOfPicture(image, loanID, requestedBy)
+
+	if err != nil {
+		responsehelper.BadRequest(c, err.Error())
+		return
+	}
+
+	responsehelper.Success(c, uploadRes)
+}
+
 // ApproveLoan
 //
 //	@Summary		Approve loan by internal
-//	@Description	User with role internal can approve a loan. fieldOfficerId is user's email, proofOfPicture is path got from upload response
+//	@Description	User with role internal can approve a loan. fieldOfficerId is user's email, proofOfPicture is file id got from upload response
 //	@Tags			Loan
 //	@Accept			json
 //	@Produce		json
+//	@Param			id		path		string				true	"Loan ID"
 //	@Param			body	body		request.ApproveLoan	true	"Request body"
 //	@Success		200		{string}	string
 //	@Router			/api/v1/loan/{id}/_approve [POST]
@@ -95,6 +139,7 @@ func (h *Handler) ApproveLoan(c *gin.Context) {
 //	@Tags		Loan
 //	@Accept		json
 //	@Produce	json
+//	@Param		id		path		string				true	"Loan ID"
 //	@Param		body	body		request.InvestLoan	true	"Request body"
 //	@Success	200		{string}	string
 //	@Router		/api/v1/loan/{id}/_invest [POST]
@@ -124,10 +169,11 @@ func (h *Handler) InvestLoan(c *gin.Context) {
 // DisburseLoan
 //
 //	@Summary		Invest loan by internal
-//	@Description	User with role internal can approve a loan. fieldOfficerId is user's email, borrowerAgreementLetter is path got from upload response
+//	@Description	User with role internal can approve a loan. fieldOfficerId is user's email, borrowerAgreementLetter is file id got from upload response
 //	@Tags			Loan
 //	@Accept			json
 //	@Produce		json
+//	@Param			id		path		string					true	"Loan ID"
 //	@Param			body	body		request.DisburseLoan	true	"Request body"
 //	@Success		200		{string}	string
 //	@Router			/api/v1/loan/{id}/_disburse [POST]
@@ -157,4 +203,47 @@ func (h *Handler) DisburseLoan(c *gin.Context) {
 	}
 
 	responsehelper.Success(c, newID)
+}
+
+// UploadBorrowerAgreementLetter
+//
+//	@Summary	Upload borrower agreement letter
+//	@Tags		Loan
+//	@Accept		multipart/form-data
+//	@Produce	json
+//	@Param		id		path		string	true	"Loan ID"
+//	@Param		file	formData	file	true	"PDF to upload"
+//	@Success	200		{object}	response.UploadBorrowerLetter
+//	@Router		/api/v1/loan/{id}/borrower-agreement-letter [POST]
+func (h *Handler) UploadBorrowerAgreementLetter(c *gin.Context) {
+	pdfFile, err := c.FormFile("file")
+
+	if err != nil {
+		responsehelper.BadRequest(c, err.Error())
+		return
+	}
+
+	mimeType, err := helper.GetMimeType(pdfFile)
+
+	if err != nil {
+		responsehelper.BadRequest(c, err.Error())
+		return
+	}
+
+	if mimeType != "application/pdf" {
+		responsehelper.BadRequest(c, "invalid pdf file")
+		return
+	}
+
+	loanID := c.Param("id")
+
+	requestedBy := c.GetString("authUser")
+	uploadRes, err := h.loanService.SaveBorrowerAgreementLetter(pdfFile, loanID, requestedBy)
+
+	if err != nil {
+		responsehelper.BadRequest(c, err.Error())
+		return
+	}
+
+	responsehelper.Success(c, uploadRes)
 }

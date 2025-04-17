@@ -7,6 +7,7 @@ import (
 	"loan-service/internal/config/database"
 	"loan-service/internal/entity"
 	borrowerRepo "loan-service/internal/repository/borrower"
+	fileRepo "loan-service/internal/repository/file"
 	loanRepo "loan-service/internal/repository/loan"
 	loanApprovalRepo "loan-service/internal/repository/loanapproval"
 	loanDisbursementRepo "loan-service/internal/repository/loandisbursement"
@@ -14,6 +15,7 @@ import (
 	userRepo "loan-service/internal/repository/user"
 	authService "loan-service/internal/service/auth"
 	borrowerService "loan-service/internal/service/borrower"
+	fileService "loan-service/internal/service/file"
 	loanService "loan-service/internal/service/loan"
 
 	"github.com/joho/godotenv"
@@ -31,6 +33,7 @@ func main() {
 	}
 
 	db.AutoMigrate(
+		&entity.File{},
 		&entity.User{},
 		&entity.Borrower{},
 		&entity.Loan{},
@@ -39,6 +42,7 @@ func main() {
 		&entity.LoanDisbursement{},
 	)
 
+	fr := fileRepo.New(db)
 	br := borrowerRepo.New(db)
 	ur := userRepo.New(db)
 	lr := loanRepo.New(db)
@@ -46,9 +50,11 @@ func main() {
 	lir := loanInvestmentRepo.New(db)
 	ldr := loanDisbursementRepo.New(db)
 
+	fs := fileService.New(fr)
 	as := authService.New(ur)
 	bs := borrowerService.New(br)
 	ls := loanService.New(&loanService.Depedency{
+		FileService:          fs,
 		UserRepo:             ur,
 		BorrowerRepo:         br,
 		LoanRepo:             lr,

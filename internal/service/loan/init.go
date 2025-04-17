@@ -7,7 +7,10 @@ import (
 	"loan-service/internal/repository/loandisbursement"
 	"loan-service/internal/repository/loaninvestment"
 	"loan-service/internal/repository/user"
+	"loan-service/internal/service/file"
 	"loan-service/pkg/model/request"
+	"loan-service/pkg/model/response"
+	"mime/multipart"
 )
 
 type ILoanService interface {
@@ -15,9 +18,12 @@ type ILoanService interface {
 	Approve(req request.ApproveLoan, requestedBy string) (id string, err error)
 	Invest(req request.InvestLoan, requestedBy string) (id string, err error)
 	Disburse(req request.DisburseLoan, requestedBy string) (id string, err error)
+	SaveProofOfPicture(image *multipart.FileHeader, loanID, requestedBy string) (res response.UploadLoanProofOfPicture, err error)
+	SaveBorrowerAgreementLetter(pdf *multipart.FileHeader, loanID, requestedBy string) (res response.UploadBorrowerLetter, err error)
 }
 
 type Depedency struct {
+	FileService          file.IFileService
 	UserRepo             user.IUserRepository
 	BorrowerRepo         borrower.IBorrowerRepository
 	LoanRepo             loan.ILoanRepository
@@ -27,6 +33,7 @@ type Depedency struct {
 }
 
 type Loan struct {
+	fileService          file.IFileService
 	userRepo             user.IUserRepository
 	borrowerRepo         borrower.IBorrowerRepository
 	loanRepo             loan.ILoanRepository
@@ -37,6 +44,7 @@ type Loan struct {
 
 func New(deps *Depedency) ILoanService {
 	return &Loan{
+		fileService:          deps.FileService,
 		userRepo:             deps.UserRepo,
 		borrowerRepo:         deps.BorrowerRepo,
 		loanRepo:             deps.LoanRepo,
