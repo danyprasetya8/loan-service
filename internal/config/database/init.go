@@ -2,13 +2,10 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"os"
-	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 func New() (db *gorm.DB, err error) {
@@ -38,15 +35,5 @@ func New() (db *gorm.DB, err error) {
 	}
 
 	dsn = dsn + " dbname=" + dbName
-	return gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.New(
-			log.New(os.Stdout, "\r\n", log.LstdFlags),
-			logger.Config{
-				SlowThreshold:             time.Second,
-				LogLevel:                  logger.Info,
-				IgnoreRecordNotFoundError: true,
-				Colorful:                  true,
-			},
-		),
-	})
+	return gorm.Open(postgres.Open(dsn))
 }

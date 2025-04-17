@@ -8,6 +8,8 @@ import (
 	"loan-service/pkg/model/response"
 	"loan-service/pkg/responsehelper"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/google/uuid"
 )
 
@@ -35,6 +37,9 @@ func (s *Borrower) Create(req *request.CreateBorrower, requestedBy string) (id s
 		},
 	}
 	err = s.repo.Create(newBorrower)
+	if err != nil {
+		log.Errorf("Failed to create borrower: %s", err.Error())
+	}
 	return newBorrower.ID, err
 }
 
@@ -55,5 +60,9 @@ func (s *Borrower) GetList(page *request.Pagination) (list []response.GetBorrowe
 }
 
 func (s *Borrower) DeleteByID(id string) (deleted bool, err error) {
-	return s.repo.Delete(id)
+	deleted, err = s.repo.Delete(id)
+	if err != nil {
+		log.Errorf("Failed to delete borrower: %s", err.Error())
+	}
+	return
 }

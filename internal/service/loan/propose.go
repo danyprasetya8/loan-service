@@ -6,6 +6,8 @@ import (
 	"loan-service/internal/entity"
 	"loan-service/pkg/model/request"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/google/uuid"
 )
 
@@ -30,5 +32,10 @@ func (ls *Loan) Propose(req request.ProposeLoan, requestedBy string) (id string,
 		},
 	}
 	err = ls.loanRepo.Create(newLoan)
+
+	if err != nil {
+		log.Errorf("Error creating loan: %s", err.Error())
+	}
+
 	return newLoan.ID, err
 }

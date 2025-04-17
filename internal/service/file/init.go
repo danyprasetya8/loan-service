@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/google/uuid"
 )
 
@@ -52,6 +54,7 @@ func (f *LocalFile) Save(file *multipart.FileHeader, fType constant.FileType, pa
 	mimeType, err := helper.GetMimeType(file)
 
 	if err != nil {
+		log.Errorf("Error getting mime type: %s", err.Error())
 		return
 	}
 
@@ -62,6 +65,7 @@ func (f *LocalFile) Save(file *multipart.FileHeader, fType constant.FileType, pa
 	p := filepath.Join("file", pathPrefix, fileID+"."+ext)
 
 	if err = f.write(file, p); err != nil {
+		log.Errorf("Error writing to local disk: %s", err.Error())
 		return
 	}
 
@@ -73,6 +77,7 @@ func (f *LocalFile) Save(file *multipart.FileHeader, fType constant.FileType, pa
 		Type:         fType,
 	}
 	if err = f.fileRepo.Create(newFile); err != nil {
+		log.Errorf("Error creating file: %s", err.Error())
 		return
 	}
 

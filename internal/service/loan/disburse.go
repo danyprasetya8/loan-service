@@ -6,6 +6,8 @@ import (
 	"loan-service/internal/entity"
 	"loan-service/pkg/model/request"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/google/uuid"
 )
 
@@ -51,6 +53,7 @@ func (ls *Loan) Disburse(req request.DisburseLoan, requestedBy string) (success 
 		},
 	}
 	if err = ls.loanDisbursementRepo.Create(loandisbursement); err != nil {
+		log.Errorf("Error creating loan disbursement: %s", err.Error())
 		return
 	}
 

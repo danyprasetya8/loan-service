@@ -9,6 +9,8 @@ import (
 	"os"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/golang-jwt/jwt"
 )
 
@@ -51,6 +53,7 @@ func (a *Auth) MockLogin(req *request.MockLogin) (string, error) {
 		})
 
 		if err != nil {
+			log.Errorf("Error creating user: %s", err.Error())
 			return "", err
 		}
 	} else {
@@ -73,6 +76,7 @@ func (a *Auth) generateAccessToken(email string) (string, error) {
 	t, err := token.SignedString([]byte(jwtSecret))
 
 	if err != nil {
+		log.Errorf("Error signing token: %s", err.Error())
 		return "", err
 	}
 
@@ -87,6 +91,7 @@ func (a *Auth) ParseToken(tokenStr string) (string, error) {
 	})
 
 	if err != nil {
+		log.Errorf("Error parsing token: %s", err.Error())
 		return "", err
 	}
 

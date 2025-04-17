@@ -6,6 +6,8 @@ import (
 	"loan-service/internal/entity"
 	"loan-service/pkg/model/request"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/google/uuid"
 )
 
@@ -51,6 +53,7 @@ func (ls *Loan) Approve(req request.ApproveLoan, requestedBy string) (success bo
 		},
 	}
 	if err = ls.loanApprovalRepo.Create(loanApproval); err != nil {
+		log.Errorf("Error creating loan approval: %s", err.Error())
 		return
 	}
 

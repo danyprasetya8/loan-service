@@ -17,18 +17,25 @@ import (
 	borrowerService "loan-service/internal/service/borrower"
 	fileService "loan-service/internal/service/file"
 	loanService "loan-service/internal/service/loan"
+	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/joho/godotenv"
 )
 
 func main() {
+	logSetup()
+
 	if err := godotenv.Load(); err != nil {
+		log.Error(err.Error())
 		panic(err)
 	}
 
 	db, err := database.New()
 
 	if err != nil {
+		log.Error(err.Error())
 		panic(err)
 	}
 
@@ -68,4 +75,15 @@ func main() {
 
 	server := http.NewServer(h, m)
 	server.Run()
+}
+
+func logSetup() {
+	log.SetFormatter(&log.TextFormatter{
+		ForceColors:     true,
+		FullTimestamp:   true,
+		TimestampFormat: "2006-01-02 15:04:05",
+	})
+
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.DebugLevel)
 }

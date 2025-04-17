@@ -7,6 +7,8 @@ import (
 	"loan-service/internal/entity"
 	"loan-service/pkg/model/request"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/google/uuid"
 )
 
@@ -33,6 +35,7 @@ func (ls *Loan) Invest(req request.InvestLoan, requestedBy string) (success bool
 	if existLoanInvestment != nil {
 		existLoanInvestment.Amount += req.Amount
 		if err = ls.loanInvestmentRepo.Save(existLoanInvestment); err != nil {
+			log.Errorf("Error saving loan investment: %s", err.Error())
 			return
 		}
 	} else {
@@ -47,6 +50,7 @@ func (ls *Loan) Invest(req request.InvestLoan, requestedBy string) (success bool
 			},
 		}
 		if err = ls.loanInvestmentRepo.Create(newInvestment); err != nil {
+			log.Errorf("Error creating loan investment: %s", err.Error())
 			return
 		}
 	}
@@ -57,6 +61,7 @@ func (ls *Loan) Invest(req request.InvestLoan, requestedBy string) (success bool
 	}
 
 	if err = ls.loanRepo.Save(loan); err != nil {
+		log.Errorf("Error saving loan: %s", err.Error())
 		return
 	}
 
