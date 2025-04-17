@@ -9,7 +9,7 @@ import (
 type IBorrowerRepository interface {
 	Create(en *entity.Borrower) error
 	Count() int64
-	GetByName(name string) *entity.Borrower
+	GetByID(id string) *entity.Borrower
 	GetList(page, size int) []entity.Borrower
 	Delete(id string) (bool, error)
 }
@@ -32,10 +32,10 @@ func (b *Borrower) Count() (c int64) {
 	return
 }
 
-func (b *Borrower) GetByName(name string) (borrower *entity.Borrower) {
-	borrower = &entity.Borrower{}
+func (b *Borrower) GetByID(id string) *entity.Borrower {
+	borrower := &entity.Borrower{}
 
-	err := b.db.Where("name = ?", name).
+	err := b.db.Where("id = ?", id).
 		First(borrower).
 		Error
 
@@ -43,7 +43,7 @@ func (b *Borrower) GetByName(name string) (borrower *entity.Borrower) {
 		return nil
 	}
 
-	return
+	return borrower
 }
 
 func (b *Borrower) GetList(page, size int) (borrowers []entity.Borrower) {

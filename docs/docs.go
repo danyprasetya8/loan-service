@@ -87,6 +87,7 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "description": "Borrower can only be created by user with fieldOfficer role",
                 "consumes": [
                     "application/json"
                 ],
@@ -148,14 +149,179 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/loan": {
+            "post": {
+                "description": "User with role fieldOfficer can propose a loan for a borrower",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loan"
+                ],
+                "summary": "Propose loan by field officer",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.ProposeLoan"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/loan/{id}/_approve": {
+            "post": {
+                "description": "User with role internal can approve a loan. fieldOfficerId is user's email, proofOfPicture is path got from upload response",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loan"
+                ],
+                "summary": "Approve loan by internal",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.ApproveLoan"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/loan/{id}/_disburse": {
+            "post": {
+                "description": "User with role internal can approve a loan. fieldOfficerId is user's email, borrowerAgreementLetter is path got from upload response",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loan"
+                ],
+                "summary": "Invest loan by internal",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.DisburseLoan"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/loan/{id}/_invest": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loan"
+                ],
+                "summary": "Invest loan by investor",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.InvestLoan"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "request.ApproveLoan": {
+            "type": "object",
+            "properties": {
+                "fieldOfficerId": {
+                    "type": "string"
+                },
+                "proofOfPicture": {
+                    "type": "string"
+                }
+            }
+        },
         "request.CreateBorrower": {
             "type": "object",
             "properties": {
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "request.DisburseLoan": {
+            "type": "object",
+            "properties": {
+                "borrowerAgreementLetter": {
+                    "type": "string"
+                },
+                "fieldOfficerId": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.InvestLoan": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
                 }
             }
         },
@@ -167,6 +333,23 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string"
+                }
+            }
+        },
+        "request.ProposeLoan": {
+            "type": "object",
+            "properties": {
+                "borrowerId": {
+                    "type": "string"
+                },
+                "principalAmount": {
+                    "type": "integer"
+                },
+                "rate": {
+                    "type": "number"
+                },
+                "roi": {
+                    "type": "number"
                 }
             }
         },

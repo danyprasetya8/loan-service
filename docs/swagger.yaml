@@ -1,8 +1,27 @@
 definitions:
+  request.ApproveLoan:
+    properties:
+      fieldOfficerId:
+        type: string
+      proofOfPicture:
+        type: string
+    type: object
   request.CreateBorrower:
     properties:
       name:
         type: string
+    type: object
+  request.DisburseLoan:
+    properties:
+      borrowerAgreementLetter:
+        type: string
+      fieldOfficerId:
+        type: string
+    type: object
+  request.InvestLoan:
+    properties:
+      amount:
+        type: integer
     type: object
   request.MockLogin:
     properties:
@@ -10,6 +29,17 @@ definitions:
         type: string
       role:
         type: string
+    type: object
+  request.ProposeLoan:
+    properties:
+      borrowerId:
+        type: string
+      principalAmount:
+        type: integer
+      rate:
+        type: number
+      roi:
+        type: number
     type: object
   response.GetBorrower:
     properties:
@@ -74,6 +104,7 @@ paths:
     post:
       consumes:
       - application/json
+      description: Borrower can only be created by user with fieldOfficer role
       parameters:
       - description: Request body
         in: body
@@ -111,4 +142,93 @@ paths:
       summary: Delete borrower by ID
       tags:
       - Borrower
+  /api/v1/loan:
+    post:
+      consumes:
+      - application/json
+      description: User with role fieldOfficer can propose a loan for a borrower
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.ProposeLoan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Propose loan by field officer
+      tags:
+      - Loan
+  /api/v1/loan/{id}/_approve:
+    post:
+      consumes:
+      - application/json
+      description: User with role internal can approve a loan. fieldOfficerId is user's
+        email, proofOfPicture is path got from upload response
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.ApproveLoan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Approve loan by internal
+      tags:
+      - Loan
+  /api/v1/loan/{id}/_disburse:
+    post:
+      consumes:
+      - application/json
+      description: User with role internal can approve a loan. fieldOfficerId is user's
+        email, borrowerAgreementLetter is path got from upload response
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.DisburseLoan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Invest loan by internal
+      tags:
+      - Loan
+  /api/v1/loan/{id}/_invest:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.InvestLoan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Invest loan by investor
+      tags:
+      - Loan
 swagger: "2.0"

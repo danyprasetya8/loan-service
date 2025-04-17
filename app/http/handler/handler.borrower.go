@@ -35,13 +35,14 @@ func (h *Handler) GetBorrowers(c *gin.Context) {
 
 // CreateBorrower
 //
-//	@Summary	Create borrower
-//	@Tags		Borrower
-//	@Accept		json
-//	@Produce	json
-//	@Param		body	body		request.CreateBorrower	true	"Request body"
-//	@Success	200		{string}	string
-//	@Router		/api/v1/borrower [POST]
+//	@Summary		Create borrower
+//	@Description	Borrower can only be created by user with fieldOfficer role
+//	@Tags			Borrower
+//	@Accept			json
+//	@Produce		json
+//	@Param			body	body		request.CreateBorrower	true	"Request body"
+//	@Success		200		{string}	string
+//	@Router			/api/v1/borrower [POST]
 func (h *Handler) CreateBorrower(c *gin.Context) {
 	var body request.CreateBorrower
 	if err := c.BindJSON(&body); err != nil {

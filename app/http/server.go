@@ -62,28 +62,32 @@ func (s *Server) borrowerRoute(v1 *gin.RouterGroup) {
 }
 
 func (s *Server) loanRoute(v1 *gin.RouterGroup) {
-	loan := v1.Group("/loan")
+	loan := v1.Group("/loan", s.middleware.Authenticate)
 	loan.GET("/")
 	loan.GET("/:id")
 
 	loan.POST(
-		"/:id",
-		s.middleware.Authorize(constant.FieldOfficer))
+		"/",
+		s.middleware.Authorize(constant.FieldOfficer),
+		s.handler.ProposeLoan)
 	loan.POST(
-		"/:id/agreement-letter",
+		"/agreement-letter",
 		s.middleware.Authorize(constant.FieldOfficer))
 
 	loan.POST(
 		"/:id/_approve",
-		s.middleware.Authorize(constant.Internal))
+		s.middleware.Authorize(constant.Internal),
+		s.handler.ApproveLoan)
 	loan.POST(
 		"/:id/proof",
 		s.middleware.Authorize(constant.Internal))
 	loan.POST(
 		"/:id/_disburse",
-		s.middleware.Authorize(constant.Internal))
+		s.middleware.Authorize(constant.Internal),
+		s.handler.DisburseLoan)
 
 	loan.POST(
 		"/:id/_invest",
-		s.middleware.Authorize(constant.Investor))
+		s.middleware.Authorize(constant.Investor),
+		s.handler.InvestLoan)
 }
