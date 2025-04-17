@@ -17,6 +17,7 @@ import (
 	borrowerService "loan-service/internal/service/borrower"
 	fileService "loan-service/internal/service/file"
 	loanService "loan-service/internal/service/loan"
+	mailerService "loan-service/internal/service/mailer"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -57,11 +58,13 @@ func main() {
 	lir := loanInvestmentRepo.New(db)
 	ldr := loanDisbursementRepo.New(db)
 
+	ms := mailerService.New()
 	fs := fileService.New(fr)
 	as := authService.New(ur)
 	bs := borrowerService.New(br)
 	ls := loanService.New(&loanService.Dependency{
 		FileService:          fs,
+		MailerService:        ms,
 		UserRepo:             ur,
 		BorrowerRepo:         br,
 		LoanRepo:             lr,

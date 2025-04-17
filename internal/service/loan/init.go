@@ -8,6 +8,7 @@ import (
 	"loan-service/internal/repository/loaninvestment"
 	"loan-service/internal/repository/user"
 	"loan-service/internal/service/file"
+	"loan-service/internal/service/mailer"
 	"loan-service/pkg/model/request"
 	"loan-service/pkg/model/response"
 	"mime/multipart"
@@ -26,6 +27,7 @@ type ILoanService interface {
 
 type Dependency struct {
 	FileService          file.IFileService
+	MailerService        mailer.IMailerService
 	UserRepo             user.IUserRepository
 	BorrowerRepo         borrower.IBorrowerRepository
 	LoanRepo             loan.ILoanRepository
@@ -36,6 +38,7 @@ type Dependency struct {
 
 type Loan struct {
 	fileService          file.IFileService
+	mailerService        mailer.IMailerService
 	userRepo             user.IUserRepository
 	borrowerRepo         borrower.IBorrowerRepository
 	loanRepo             loan.ILoanRepository
@@ -47,6 +50,7 @@ type Loan struct {
 func New(deps *Dependency) ILoanService {
 	return &Loan{
 		fileService:          deps.FileService,
+		mailerService:        deps.MailerService,
 		userRepo:             deps.UserRepo,
 		borrowerRepo:         deps.BorrowerRepo,
 		loanRepo:             deps.LoanRepo,
