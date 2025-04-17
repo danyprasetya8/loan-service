@@ -142,7 +142,7 @@ func (h *Handler) ApproveLoan(c *gin.Context) {
 //	@Produce	json
 //	@Param		id		path		string				true	"Loan ID"
 //	@Param		body	body		request.InvestLoan	true	"Request body"
-//	@Success	200		{string}	string
+//	@Success	200		{boolean}	true
 //	@Router		/api/v1/loan/{id}/_invest [POST]
 func (h *Handler) InvestLoan(c *gin.Context) {
 	var body request.InvestLoan
@@ -158,14 +158,14 @@ func (h *Handler) InvestLoan(c *gin.Context) {
 
 	requestedBy := c.GetString("authUser")
 	body.LoanID = c.Param("id")
-	newID, err := h.loanService.Invest(body, requestedBy)
+	success, err := h.loanService.Invest(body, requestedBy)
 
 	if err != nil {
 		responsehelper.BadRequest(c, err.Error())
 		return
 	}
 
-	responsehelper.Success(c, newID)
+	responsehelper.Success(c, success)
 }
 
 // DisburseLoan

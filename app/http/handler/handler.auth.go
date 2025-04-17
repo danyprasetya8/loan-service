@@ -15,7 +15,7 @@ import (
 //	@Accept		json
 //	@Produce	json
 //	@Param		body	body		request.MockLogin	true	"Request body"
-//	@Success	200		{string}	string
+//	@Success	200		{boolean}	true
 //	@Router		/api/v1/auth/mock-login [POST]
 func (h *Handler) MockLogin(c *gin.Context) {
 	var body request.MockLogin
@@ -37,5 +37,5 @@ func (h *Handler) MockLogin(c *gin.Context) {
 	}
 
 	c.SetCookie("token", token, 3600*24*30, "/", "", false, true)
-	responsehelper.Success(c, token)
+	responsehelper.Success(c, true)
 }
