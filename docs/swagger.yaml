@@ -234,7 +234,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            type: boolean
       summary: Invest loan by internal
       tags:
       - Loan

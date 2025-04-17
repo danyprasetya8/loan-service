@@ -17,7 +17,7 @@ type ILoanService interface {
 	Propose(req request.ProposeLoan, requestedBy string) (id string, err error)
 	Approve(req request.ApproveLoan, requestedBy string) (success bool, err error)
 	Invest(req request.InvestLoan, requestedBy string) (id string, err error)
-	Disburse(req request.DisburseLoan, requestedBy string) (id string, err error)
+	Disburse(req request.DisburseLoan, requestedBy string) (success bool, err error)
 	SaveProofOfPicture(image *multipart.FileHeader, loanID, requestedBy string) (res response.UploadLoanProofOfPicture, err error)
 	SaveBorrowerAgreementLetter(pdf *multipart.FileHeader, loanID, requestedBy string) (res response.UploadBorrowerLetter, err error)
 }
