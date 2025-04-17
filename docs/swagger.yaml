@@ -52,6 +52,88 @@ definitions:
       name:
         type: string
     type: object
+  response.GetLoan:
+    properties:
+      borrowerId:
+        type: string
+      createdAt:
+        type: string
+      createdBy:
+        type: string
+      id:
+        type: string
+      investedAmount:
+        type: integer
+      principalAmount:
+        type: integer
+      rate:
+        type: number
+      roi:
+        type: number
+      status:
+        type: string
+    type: object
+  response.GetLoanDetail:
+    properties:
+      approval:
+        $ref: '#/definitions/response.LoanApprovalDetail'
+      borrowerId:
+        type: string
+      createdAt:
+        type: string
+      createdBy:
+        type: string
+      disbursement:
+        $ref: '#/definitions/response.LoanDisbursementDetail'
+      id:
+        type: string
+      investedAmount:
+        type: integer
+      investors:
+        items:
+          $ref: '#/definitions/response.LoanInvestorDetail'
+        type: array
+      principalAmount:
+        type: integer
+      rate:
+        type: number
+      roi:
+        type: number
+      status:
+        type: string
+    type: object
+  response.GetUser:
+    properties:
+      email:
+        type: string
+      role:
+        type: string
+    type: object
+  response.LoanApprovalDetail:
+    properties:
+      date:
+        type: string
+      fieldOfficerId:
+        type: string
+      proofOfPicture:
+        type: string
+    type: object
+  response.LoanDisbursementDetail:
+    properties:
+      borrowerAgreementLetter:
+        type: string
+      date:
+        type: string
+      fieldOfficerId:
+        type: string
+    type: object
+  response.LoanInvestorDetail:
+    properties:
+      amount:
+        type: integer
+      investorId:
+        type: string
+    type: object
   response.UploadBorrowerLetter:
     properties:
       id:
@@ -92,6 +174,22 @@ paths:
           schema:
             type: boolean
       summary: Mock login using email and user role
+      tags:
+      - Auth
+  /api/v1/auth/user:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.GetUser'
+            type: array
+      summary: Get all users for testing purpose
       tags:
       - Auth
   /api/v1/borrower:
@@ -161,6 +259,34 @@ paths:
       tags:
       - Borrower
   /api/v1/loan:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: default is 1
+        in: query
+        name: page
+        type: integer
+      - description: default is 10
+        in: query
+        name: size
+        type: integer
+      - description: filter by loan status
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.GetLoan'
+            type: array
+      summary: Get list of loans
+      tags:
+      - Loan
     post:
       consumes:
       - application/json
@@ -180,6 +306,26 @@ paths:
           schema:
             type: string
       summary: Propose loan by field officer
+      tags:
+      - Loan
+  /api/v1/loan/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetLoanDetail'
+      summary: Get loan detail
       tags:
       - Loan
   /api/v1/loan/{id}/_approve:

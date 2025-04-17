@@ -6,6 +6,7 @@ import (
 	"loan-service/internal/entity"
 	"loan-service/internal/repository/user"
 	"loan-service/pkg/model/request"
+	"loan-service/pkg/model/response"
 	"os"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 )
 
 type IAuthService interface {
+	GetUsers() []response.GetUser
 	GetUserRole(email string) (constant.UserRole, error)
 	MockLogin(req *request.MockLogin) (string, error)
 	ParseToken(tokenStr string) (string, error)
@@ -27,6 +29,21 @@ type Auth struct {
 
 func New(userRepo user.IUserRepository) IAuthService {
 	return &Auth{userRepo}
+}
+
+func (a *Auth) GetUsers() []response.GetUser {
+	users := a.userRepo.GetAll()
+
+	list := make([]response.GetUser, 0)
+
+	for _, user := range users {
+		list = append(list, response.GetUser{
+			Email: user.Email,
+			Role:  string(user.Role),
+		})
+	}
+
+	return list
 }
 
 func (a *Auth) GetUserRole(email string) (constant.UserRole, error) {

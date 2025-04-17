@@ -39,6 +39,7 @@ func (s *Server) v1Route(api *gin.RouterGroup) {
 	v1 := api.Group("/v1")
 
 	auth := v1.Group("/auth")
+	auth.GET("/user", s.handler.GetAllUsers)
 	auth.POST("/mock-login", s.handler.MockLogin)
 
 	s.borrowerRoute(v1)
@@ -63,8 +64,9 @@ func (s *Server) borrowerRoute(v1 *gin.RouterGroup) {
 
 func (s *Server) loanRoute(v1 *gin.RouterGroup) {
 	loan := v1.Group("/loan", s.middleware.Authenticate)
-	loan.GET("/")
-	loan.GET("/:id")
+
+	loan.GET("/", s.handler.GetLoans)
+	loan.GET("/:id", s.handler.GetLoanDetail)
 
 	loan.POST(
 		"/",

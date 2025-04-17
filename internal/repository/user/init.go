@@ -10,6 +10,7 @@ type IUserRepository interface {
 	Create(en *entity.User) error
 	Save(en *entity.User) error
 	Get(email string) *entity.User
+	GetAll() []entity.User
 }
 
 type User struct {
@@ -26,6 +27,11 @@ func (u *User) Create(en *entity.User) error {
 
 func (u *User) Save(en *entity.User) error {
 	return u.db.Save(en).Error
+}
+
+func (u *User) GetAll() (users []entity.User) {
+	u.db.Find(&users)
+	return
 }
 
 func (u *User) Get(email string) (us *entity.User) {

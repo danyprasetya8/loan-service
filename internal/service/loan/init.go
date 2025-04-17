@@ -14,6 +14,8 @@ import (
 )
 
 type ILoanService interface {
+	GetList(status string, pagination *request.Pagination) (list []response.GetLoan, pageRes *response.Pagination)
+	GetDetail(id string) (detail *response.GetLoanDetail, err error)
 	Propose(req request.ProposeLoan, requestedBy string) (id string, err error)
 	Approve(req request.ApproveLoan, requestedBy string) (success bool, err error)
 	Invest(req request.InvestLoan, requestedBy string) (success bool, err error)

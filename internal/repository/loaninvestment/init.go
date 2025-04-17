@@ -7,6 +7,7 @@ import (
 )
 
 type ILoanInvestmentRepository interface {
+	GetByLoanID(loanID string) []entity.LoanInvestment
 	GetByLoanAndInvestor(loanID, investorID string) *entity.LoanInvestment
 	Create(en *entity.LoanInvestment) error
 	Save(en *entity.LoanInvestment) error
@@ -18,6 +19,14 @@ type LoanInvestment struct {
 
 func New(db *gorm.DB) ILoanInvestmentRepository {
 	return &LoanInvestment{db}
+}
+
+func (l *LoanInvestment) GetByLoanID(loanID string) []entity.LoanInvestment {
+	li := make([]entity.LoanInvestment, 0)
+
+	l.db.Where("loan_id = ?", loanID).
+		Find(&li)
+	return li
 }
 
 func (l *LoanInvestment) GetByLoanAndInvestor(loanID, investorID string) *entity.LoanInvestment {

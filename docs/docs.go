@@ -48,6 +48,31 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/auth/user": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get all users for testing purpose",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.GetUser"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/borrower": {
             "get": {
                 "consumes": [
@@ -151,6 +176,49 @@ const docTemplate = `{
             }
         },
         "/api/v1/loan": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loan"
+                ],
+                "summary": "Get list of loans",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "default is 1",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "default is 10",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "filter by loan status",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.GetLoan"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "User with role fieldOfficer can propose a loan for a borrower",
                 "consumes": [
@@ -179,6 +247,37 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/loan/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loan"
+                ],
+                "summary": "Get loan detail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Loan ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetLoanDetail"
                         }
                     }
                 }
@@ -463,6 +562,132 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.GetLoan": {
+            "type": "object",
+            "properties": {
+                "borrowerId": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "investedAmount": {
+                    "type": "integer"
+                },
+                "principalAmount": {
+                    "type": "integer"
+                },
+                "rate": {
+                    "type": "number"
+                },
+                "roi": {
+                    "type": "number"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.GetLoanDetail": {
+            "type": "object",
+            "properties": {
+                "approval": {
+                    "$ref": "#/definitions/response.LoanApprovalDetail"
+                },
+                "borrowerId": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "type": "string"
+                },
+                "disbursement": {
+                    "$ref": "#/definitions/response.LoanDisbursementDetail"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "investedAmount": {
+                    "type": "integer"
+                },
+                "investors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.LoanInvestorDetail"
+                    }
+                },
+                "principalAmount": {
+                    "type": "integer"
+                },
+                "rate": {
+                    "type": "number"
+                },
+                "roi": {
+                    "type": "number"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.GetUser": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.LoanApprovalDetail": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "fieldOfficerId": {
+                    "type": "string"
+                },
+                "proofOfPicture": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.LoanDisbursementDetail": {
+            "type": "object",
+            "properties": {
+                "borrowerAgreementLetter": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "fieldOfficerId": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.LoanInvestorDetail": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "investorId": {
                     "type": "string"
                 }
             }

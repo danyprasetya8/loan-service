@@ -39,3 +39,15 @@ func (h *Handler) MockLogin(c *gin.Context) {
 	c.SetCookie("token", token, 3600*24*30, "/", "", false, true)
 	responsehelper.Success(c, true)
 }
+
+// GetAllUsers
+//
+//	@Summary	Get all users for testing purpose
+//	@Tags		Auth
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	{array}	response.GetUser
+//	@Router		/api/v1/auth/user [GET]
+func (h *Handler) GetAllUsers(c *gin.Context) {
+	responsehelper.Success(c, h.authService.GetUsers())
+}

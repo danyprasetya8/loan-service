@@ -49,12 +49,14 @@ type Loan struct {
 	ROI             float64             `gorm:"not null"`
 	DeletedAt       gorm.DeletedAt      `gorm:"index"`
 	Audit
+	LoanApproval     LoanApproval     `gorm:"foreignKey:LoanID"`
+	LoanDisbursement LoanDisbursement `gorm:"foreignKey:LoanID"`
+	LoanInvestment   []LoanInvestment `gorm:"foreignKey:LoanID"`
 }
 
 type LoanApproval struct {
-	ID             string `gorm:"primaryKey;type:varchar(255)"`
-	LoanID         string
-	Loan           Loan           `gorm:"constraint:OnDelete:CASCADE"`
+	ID             string         `gorm:"primaryKey;type:varchar(255)"`
+	LoanID         string         `gorm:"index"`
 	FieldOfficerID string         `gorm:"varchar(255);not null"`
 	ProofOfPicture string         `gorm:"varchar(255);not null"`
 	DeletedAt      gorm.DeletedAt `gorm:"index"`
@@ -62,9 +64,8 @@ type LoanApproval struct {
 }
 
 type LoanInvestment struct {
-	ID         string `gorm:"primaryKey;type:varchar(255)"`
-	LoanID     string
-	Loan       Loan           `gorm:"constraint:OnDelete:CASCADE"`
+	ID         string         `gorm:"primaryKey;type:varchar(255)"`
+	LoanID     string         `gorm:"index"`
 	InvestorID string         `gorm:"varchar(255);not null"`
 	Amount     int64          `gorm:"not null"`
 	DeletedAt  gorm.DeletedAt `gorm:"index"`
@@ -72,9 +73,8 @@ type LoanInvestment struct {
 }
 
 type LoanDisbursement struct {
-	ID                      string `gorm:"primaryKey;type:varchar(255)"`
-	LoanID                  string
-	Loan                    Loan           `gorm:"constraint:OnDelete:CASCADE"`
+	ID                      string         `gorm:"primaryKey;type:varchar(255)"`
+	LoanID                  string         `gorm:"index"`
 	FieldOfficerID          string         `gorm:"varchar(255);not null"`
 	BorrowerAgreementLetter string         `gorm:"varchar(255);not null"`
 	DeletedAt               gorm.DeletedAt `gorm:"index"`

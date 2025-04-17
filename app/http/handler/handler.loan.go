@@ -3,10 +3,61 @@ package handler
 import (
 	"loan-service/pkg/helper"
 	"loan-service/pkg/model/request"
+	"loan-service/pkg/requesthelper"
 	"loan-service/pkg/responsehelper"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
+
+// GetLoans
+//
+//	@Summary	Get list of loans
+//	@Tags		Loan
+//	@Accept		json
+//	@Produce	json
+//	@Param		page	query	int		false	"default is 1"
+//	@Param		size	query	int		false	"default is 10"
+//	@Param		status	query	string	false	"filter by loan status"
+//	@Success	200		{array}	response.GetLoan
+//	@Router		/api/v1/loan [GET]
+func (h *Handler) GetLoans(c *gin.Context) {
+	var pagination request.Pagination
+	if err := c.BindQuery(&pagination); err != nil {
+		responsehelper.BadRequest(c, err.Error())
+		return
+	}
+
+	requesthelper.SetDefaultPagination(&pagination)
+
+	statusQuery := c.Query("status")
+
+	list, pageRes := h.loanService.GetList(strings.TrimSpace(statusQuery), &pagination)
+
+	responsehelper.SuccessPage(c, list, pageRes)
+}
+
+// GetLoanDetail
+//
+//	@Summary	Get loan detail
+//	@Tags		Loan
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"Loan ID"
+//	@Success	200	{object}	response.GetLoanDetail
+//	@Router		/api/v1/loan/{id} [GET]
+func (h *Handler) GetLoanDetail(c *gin.Context) {
+	loanID := c.Param("id")
+
+	detail, err := h.loanService.GetDetail(loanID)
+
+	if err != nil {
+		responsehelper.BadRequest(c, err.Error())
+		return
+	}
+
+	responsehelper.Success(c, detail)
+}
 
 // ProposeLoan
 //
