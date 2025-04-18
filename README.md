@@ -11,6 +11,8 @@ docker-compose up --build
 ```
 go run cmd/http/main.go
 ```
+##### 4. Swagger route
+- http://localhost:8080/api/swagger/index.html
 
 # Feature
 ##### 1. User can mocked log in by input valid email and role
