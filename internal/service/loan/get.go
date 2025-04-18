@@ -49,7 +49,7 @@ func (ls *Loan) GetDetail(id string) (detail *response.GetLoanDetail, err error)
 		})
 	}
 
-	return &response.GetLoanDetail{
+	detail = &response.GetLoanDetail{
 		ID:              loanDetail.ID,
 		BorrowerID:      loanDetail.BorrowerID,
 		Status:          loanDetail.Status,
@@ -59,16 +59,24 @@ func (ls *Loan) GetDetail(id string) (detail *response.GetLoanDetail, err error)
 		ROI:             loanDetail.ROI,
 		CreatedAt:       helper.FormatDate(loanDetail.CreatedAt),
 		CreatedBy:       loanDetail.CreatedBy,
-		Approval: &response.LoanApprovalDetail{
+		Investors:       investorsRes,
+	}
+
+	if loanDetail.LoanApproval.FieldOfficerID != "" {
+		detail.Approval = &response.LoanApprovalDetail{
 			FieldOfficerID: loanDetail.LoanApproval.FieldOfficerID,
 			ProofOfPicture: loanDetail.LoanApproval.ProofOfPicture,
 			Date:           helper.FormatDate(loanDetail.LoanApproval.CreatedAt),
-		},
-		Investors: investorsRes,
-		Disbursement: &response.LoanDisbursementDetail{
+		}
+	}
+
+	if loanDetail.LoanDisbursement.FieldOfficerID != "" {
+		detail.Disbursement = &response.LoanDisbursementDetail{
 			FieldOfficerID:          loanDetail.LoanDisbursement.FieldOfficerID,
 			BorrowerAgreementLetter: loanDetail.LoanDisbursement.BorrowerAgreementLetter,
 			Date:                    helper.FormatDate(loanDetail.LoanDisbursement.CreatedAt),
-		},
-	}, nil
+		}
+	}
+
+	return
 }

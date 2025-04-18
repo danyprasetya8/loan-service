@@ -9,14 +9,19 @@ import (
 )
 
 func New() (db *gorm.DB, err error) {
-	dsn := os.Getenv("POSTGRES_DSN")
+	host := os.Getenv("POSTGRES_HOST")
+	port := os.Getenv("POSTGRES_PORT")
+	user := os.Getenv("POSTGRES_USER")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	dbName := os.Getenv("POSTGRES_DB")
+
+	dsn := fmt.Sprintf("host=%s user=%s database=postgres password=%s port=%s sslmode=disable TimeZone=Asia/Jakarta", host, user, password, port)
 	db, err = gorm.Open(postgres.Open(dsn))
 
 	if err != nil {
 		return nil, err
 	}
 
-	dbName := os.Getenv("POSTGRES_DB")
 	checkQuery := fmt.Sprintf("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = '%s')", dbName)
 
 	dbExist := false
@@ -34,6 +39,6 @@ func New() (db *gorm.DB, err error) {
 		}
 	}
 
-	dsn = dsn + " dbname=" + dbName
+	dsn = fmt.Sprintf("host=%s user=%s database=%s password=%s port=%s sslmode=disable TimeZone=Asia/Jakarta", host, user, dbName, password, port)
 	return gorm.Open(postgres.Open(dsn))
 }

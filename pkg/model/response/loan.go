@@ -21,7 +21,7 @@ type LoanApprovalDetail struct {
 }
 
 type LoanInvestorDetail struct {
-	InvestorID string `json:"investorId"`
+	InvestorID string `json:"id"`
 	Amount     int64  `json:"amount"`
 }
 

@@ -47,6 +47,8 @@ func (s *Borrower) GetList(page *request.Pagination) (list []response.GetBorrowe
 	borrowers := s.repo.GetList(page.Page, page.Size)
 	total := s.repo.Count()
 
+	list = make([]response.GetBorrower, 0)
+
 	for _, borrower := range borrowers {
 		list = append(list, response.GetBorrower{
 			ID:        borrower.ID,

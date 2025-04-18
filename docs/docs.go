@@ -687,7 +687,7 @@ const docTemplate = `{
                 "amount": {
                     "type": "integer"
                 },
-                "investorId": {
+                "id": {
                     "type": "string"
                 }
             }

@@ -131,7 +131,7 @@ definitions:
     properties:
       amount:
         type: integer
-      investorId:
+      id:
         type: string
     type: object
   response.UploadBorrowerLetter:
