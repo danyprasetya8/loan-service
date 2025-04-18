@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=../../../mocks/mock_mailer_service.go -package=mocks loan-service/internal/service/mailer IMailerService
 package mailer
 
 import (

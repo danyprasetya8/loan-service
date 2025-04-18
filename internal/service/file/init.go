@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=../../../mocks/mock_file_service.go -package=mocks loan-service/internal/service/file IFileService
 package file
 
 import (

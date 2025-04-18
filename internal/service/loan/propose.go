@@ -7,8 +7,6 @@ import (
 	"loan-service/pkg/model/request"
 
 	log "github.com/sirupsen/logrus"
-
-	"github.com/google/uuid"
 )
 
 func (ls *Loan) Propose(req request.ProposeLoan, requestedBy string) (id string, err error) {
@@ -19,7 +17,6 @@ func (ls *Loan) Propose(req request.ProposeLoan, requestedBy string) (id string,
 	}
 
 	newLoan := &entity.Loan{
-		ID:              uuid.New().String(),
 		BorrowerID:      borrower.ID,
 		Status:          constant.Proposed,
 		PrincipalAmount: req.PrincipalAmount,

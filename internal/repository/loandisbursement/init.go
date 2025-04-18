@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=../../../mocks/mock_loan_disbursement_repository.go -package=mocks loan-service/internal/repository/loandisbursement ILoanDisbursementRepository
 package loandisbursement
 
 import (

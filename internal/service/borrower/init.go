@@ -9,8 +9,6 @@ import (
 	"loan-service/pkg/responsehelper"
 
 	log "github.com/sirupsen/logrus"
-
-	"github.com/google/uuid"
 )
 
 type IBorrowerService interface {
@@ -29,7 +27,6 @@ func New(repo repo.IBorrowerRepository) IBorrowerService {
 
 func (s *Borrower) Create(req *request.CreateBorrower, requestedBy string) (id string, err error) {
 	newBorrower := &entity.Borrower{
-		ID:   uuid.New().String(),
 		Name: req.Name,
 		Audit: entity.Audit{
 			CreatedBy: requestedBy,

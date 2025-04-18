@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=../../../mocks/mock_user_repository.go -package=mocks loan-service/internal/repository/user IUserRepository
 package user
 
 import (

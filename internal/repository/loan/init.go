@@ -1,9 +1,11 @@
+//go:generate mockgen -destination=../../../mocks/mock_loan_repository.go -package=mocks loan-service/internal/repository/loan ILoanRepository
 package loan
 
 import (
 	"loan-service/internal/constant"
 	"loan-service/internal/entity"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -81,6 +83,7 @@ func (l *Loan) Get(id string) *entity.Loan {
 }
 
 func (l *Loan) Create(en *entity.Loan) error {
+	en.ID = uuid.New().String()
 	return l.db.Create(en).Error
 }
 

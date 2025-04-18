@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=../../../mocks/mock_loan_approval_repository.go -package=mocks loan-service/internal/repository/loanapproval ILoanApprovalRepository
 package loanapproval
 
 import (
