@@ -258,6 +258,24 @@ paths:
       summary: Delete borrower by ID
       tags:
       - Borrower
+  /api/v1/file/{id}/_download:
+    post:
+      parameters:
+      - description: File ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+      summary: Download file
+      tags:
+      - File
   /api/v1/loan:
     get:
       consumes:

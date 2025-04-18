@@ -175,6 +175,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/file/{id}/_download": {
+            "post": {
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Download file",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "File ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/loan": {
             "get": {
                 "consumes": [

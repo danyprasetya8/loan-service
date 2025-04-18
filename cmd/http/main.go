@@ -73,7 +73,7 @@ func main() {
 		LoanDisbursementRepo: ldr,
 	})
 
-	h := handler.New(as, bs, ls)
+	h := handler.New(fs, as, bs, ls)
 	m := middleware.New(as)
 
 	server := http.NewServer(h, m)

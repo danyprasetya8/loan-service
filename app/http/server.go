@@ -42,6 +42,9 @@ func (s *Server) v1Route(api *gin.RouterGroup) {
 	auth.GET("/user", s.handler.GetAllUsers)
 	auth.POST("/mock-login", s.handler.MockLogin)
 
+	file := v1.Group("/file", s.middleware.Authenticate)
+	file.POST("/:id/_download", s.handler.DownloadFile)
+
 	s.borrowerRoute(v1)
 	s.loanRoute(v1)
 }
